@@ -1,1 +1,0 @@
-# furima-mock
