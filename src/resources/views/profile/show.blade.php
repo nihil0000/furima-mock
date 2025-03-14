@@ -17,14 +17,14 @@
     <section class="profile-tabs">
         <ul class="tabs">
             <li>
-                <a href="{{ route('profile.show', ['tab' => 'sell']) }}"
-                    class="{{ request()->query('tab', 'sell') === 'sell' ? 'active' : '' }}">
+                <a href="{{ route('profile.show', ['tab' => 'exhibit']) }}"
+                    class="{{ request()->query('tab', 'exhibit') === 'exhibit' ? 'active' : '' }}">
                     出品した商品
                 </a>
             </li>
             <li>
-                <a href="{{ route('profile.show', ['tab' => 'bought']) }}"
-                    class="{{ request()->query('tab') === 'bought' ? 'active' : '' }}">
+                <a href="{{ route('profile.show', ['tab' => 'order']) }}"
+                    class="{{ request()->query('tab') === 'order' ? 'active' : '' }}">
                     購入した商品
                 </a>
             </li>
