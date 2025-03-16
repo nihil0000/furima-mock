@@ -6,7 +6,7 @@
 
 @section('content')
 <main class="register-container">
-    <p class="register__title">Register</p>
+    <p class="register__title">会員登録</p>
 
     <!-- register form -->
     <div class="register-form">
@@ -66,19 +66,19 @@
                 <p class="form__group-label">確認用パスワード</p>
 
                 <div class="form__group-item">
-                    <input type="password" class="form__input" name="password" placeholder="例: coachtech1106">
+                    <input type="password" class="form__input" name="password_confirmation">
                 </div>
 
                 <!-- validation -->
-                @error('confirm_password')
+                @error('password_confirmation')
                 <div class="form__error">
                     <p class="form__error-msg">{{ $message }}</p>
                 </div>
                 @enderror
             </div>
 
-            <button type="submit" class="register-button">登録</button>
-            <a href="" class="auth-link">ログインはこちら</a>
+            <button type="submit" class="register-button">登録する</button>
+            <a href="{{ route('login.create') }}" class="auth-link">ログインはこちら</a>
         </form>
     </div>
 </main>
