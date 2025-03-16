@@ -8,10 +8,11 @@
 <main class="login-container">
     <p class="login__title">ログイン</p>
 
+    <!-- login form -->
     <div class="login-form">
         <form action="{{ route('login.store') }}" class="form__body" method="post" novalidate>
             @csrf
-            <!-- email form -->
+            <!-- email -->
             <div class="form__group">
                 <p class="form__group-label">メールアドレス</p>
 
@@ -22,12 +23,12 @@
                 <!-- validation -->
                 @error('email')
                 <div class="form__error">
-                    <p class="form__error-msg">{{ $error }}</p>
+                    <p class="form__error-msg">{{ $message }}</p>
                 </div>
                 @enderror
             </div>
 
-            <!-- password form -->
+            <!-- password -->
             <div class="form__group">
                 <p class="form__group-label">パスワード</p>
 
@@ -44,7 +45,7 @@
             </div>
 
             <button type="submit" class="login-button">ログインする</button>
-            <a href="" class="auth-link">会員登録はこちら</a>
+            <a href="{{ route('register.create') }}" class="auth-link">会員登録はこちら</a>
         </form>
     </div>
 </main>
