@@ -23,12 +23,21 @@ class AuthenticatedSessionController extends Controller
         // Attempt authentication
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate(); // Prevent session fixation attacks
-            return redirect()->intended(route('admin.index')); // Redirect admin page
+            return redirect()->intended(route('product.index')); // Redirect admin page
         }
 
         // Authentication failed
         return back()->withErrors([
             'email' => 'ログイン情報が登録されていません。'
         ]);
+    }
+
+    // Logout
+    public function destroy(Request $request)
+    {
+        Auth::logout(); // Logout the user
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate CSRF token
+        return redirect('login'); // Redirect to login page
     }
 }
