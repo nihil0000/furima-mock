@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('product_name', 255);
-            $table->string('brand_name', 255);
+            $table->string('brand_name', 255)->nullable();
             $table->unsignedInteger('price');
             $table->text('description');
             $table->string('status', 50);
