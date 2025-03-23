@@ -5,44 +5,61 @@
 @endsection
 
 @section('content')
-<main class="product-list-container">
-    <section class="profile-tabs">
-        <ul class="tabs">
-            <li>
-                <a href="{{ route('product.index', ['tab' => 'recommend']) }}"
-                    class="{{ request()->query('tab', 'recommend') === 'recommend' ? 'mylist' : '' }}">
-                    おすすめ
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('product.index', ['tab' => 'mylist']) }}"
-                    class="{{ request()->query('tab') === 'mylist' ? 'recommend' : '' }}">
-                    マイリスト
-                </a>
-            </li>
-        </ul>
-    </section>
+<main class="product-list__container">
 
-    {{--
+    <!-- navigation tabs -->
+    <div class="product-tabs">
+        <a href="{{ route('product.index', ['tab' => 'recommend', 'query' => request('query')]) }}"
+            class="{{ request()->query('tab', 'recommend') === 'recommend' ? 'active-tab' : '' }}">
+            おすすめ
+        </a>
+        <a href="{{ route('product.index', ['tab' => 'mylist', 'query' => request('query')]) }}"
+            class="{{ request()->query('tab') === 'mylist' ? 'active-tab' : '' }}">
+            マイリスト
+        </a>
+    </div>
+
+    <!-- display the search keyword -->
+    @if (!empty($query))
+        <p class="search-keyword">「{{ $query }}」の検索結果</p>
+    @endif
+
     @if (request()->query('tab', 'recommend') === 'recommend')
-        <section class="product-list">
-            @foreach ($sellProducts as $product)
-                <div class="product">
-                    <img src="{{ asset($product->image_path ?? 'images/sample-product.png') }}" alt="商品画像">
-                    <p class="product-name">{{ $product->name }}</p>
+        <!-- show recommended products -->
+        <section class="product-list__grid">
+            @foreach ($products as $product)
+                <div class="product-card">
+                    <a href="{{ route('product.show', ['product' => $product->id]) }}">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                        <p class="product-name">{{ $product->product_name }}</p>
+
+                        @if ($product->is_sold)
+                            <span class="sold-label">Sold</span>
+                        @endif
+                    </a>
                 </div>
             @endforeach
         </section>
-    @else
-        <section class="product-list">
-            @foreach ($boughtProducts as $product)
-                <div class="product">
-                    <img src="{{ asset($product->image_path ?? 'images/sample-product.png') }}" alt="商品画像">
-                    <p class="product-name">{{ $product->name }}</p>
+
+    @elseif (isset($favorites))
+        <!-- show favorite products -->
+        <section class="product-list__grid">
+            @foreach ($favorites as $favorite)
+                @php $product = $favorite->product; @endphp
+
+                <div class="product-card">
+                    <a href="{{ route('product.show', ['product' => $product->id]) }}">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                        <p class="product-name">{{ $product->product_name }}</p>
+
+                        @if ($product->is_sold)
+                            <span class="sold-label">Sold</span>
+                        @endif
+                    </a>
                 </div>
+
             @endforeach
         </section>
     @endif
-    --}}
 </main>
 @endsection
