@@ -33,25 +33,32 @@ Route::controller(RegisteredUserController::class)->group(function () {
 });
 
 // profile
-Route::controller(ProfileController::class)->group(function () {
-    Route::get('/mypage', 'show')->name('profile.show'); // display the profile
-    Route::get('/mypage/profile', 'edit')->name('profile.edit');  // display to edit　the profile
-    Route::post('/mypage', 'store')->name('profile.store');  // register　the profile
+Route::middleware('auth')
+    ->controller(ProfileController::class)
+    ->group(function () {
+        Route::get('/mypage', 'show')->name('profile.show'); // display the profile
+        Route::get('/mypage/profile', 'edit')->name('profile.edit');  // display to edit　the profile
+        Route::post('/mypage', 'store')->name('profile.store');  // register　the profile
 });
 
 // product
 Route::controller(ProductController::class)->group(function () {
     Route::get('/', 'index')->name('product.index'); // display the product list
-    Route::get('/product/{product_id}', 'show')->name('product.show'); // display details of product
-    Route::get('/exhibit', 'create')->name('product.create'); // exhibit product
-    Route::post('/exhibit', 'store')->name('product.store'); // register product
+    Route::get('/product/{product}', 'show')->name('product.show'); // display details of product
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/exhibit', 'create')->name('product.create'); // exhibit product
+        Route::post('/exhibit', 'store')->name('product.store'); // register product
+    });
 });
 
 // purchase
-Route::controller(PurchaseController::class)->group(function () {
-    Route::get('/purchase/address/{product_id}', 'create')->name('purchase.create');
-    Route::get('/purchase/{product_id}', 'show')->name('purchase.show');
-    Route::post('/purchase', 'update')->name('purchase.update');
+Route::middleware('auth')
+    ->controller(PurchaseController::class)
+    ->group(function () {
+        Route::get('/purchase/address/{product_id}', 'create')->name('purchase.create');
+        Route::get('/purchase/{product}', 'show')->name('purchase.show');
+        Route::post('/purchase', 'update')->name('purchase.update');
 });
 
 
