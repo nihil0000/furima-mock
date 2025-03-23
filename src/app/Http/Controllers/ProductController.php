@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Favorite;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    // Display product list
     public function index(Request $request)
     {
         $tab = $request->query('tab', 'recommend');
@@ -53,11 +56,15 @@ class ProductController extends Controller
         return view('product.index', compact('products', 'query'));
     }
 
+    // Show product details
     public function show(Product $product)
     {
-        $product->with('categories')->get();
+        $product->loadCount(['favorites', 'comments']);
+        $product->load(['categories', 'comments.user']);
 
-        return view('product.show', compact('product'));
+        $randomComments = $product->comments->shuffle()->take(3);
+
+        return view('product.show', compact('product', 'randomComments'));
     }
 
     public function create()

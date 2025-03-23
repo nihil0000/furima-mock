@@ -2,66 +2,106 @@
 
 @section('content')
 <main class="product-detail-container">
-    <!-- 商品情報エリア -->
+    <!-- product -->
     <div class="product-detail">
-        <!-- 左側（商品画像） -->
+        <!-- product image -->
         <div class="product-image">
-            <img src="{{ asset('images/sample-product.png') }}" alt="商品画像">
+            <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
         </div>
 
-        <!-- 右側（商品詳細情報） -->
+        <!-- product details -->
         <div class="product-info">
-            <h1 class="product-title">商品名がここに入る</h1>
-            <p class="product-brand">ブランド名</p>
-            <p class="product-price">¥47,000 <span class="tax-included">（税込）</span></p>
+            <h1 class="product-title">{{ $product->product_name }}</h1>
+            <p class="product-brand">{{ $product->brand_name }}</p>
+            <p class="product-price">¥{{ $product->price }} <span class="tax-included">（税込）</span></p>
 
-            <!-- いいね & コメント -->
-            <div class="product-actions">
-                <span class="likes">⭐ 3</span>
-                <span class="comments">💬 1</span>
+            <!-- favorite -->
+            <div class="favorite-container">
+                @if ($product->favorites->contains('user_id', Auth::id()))
+                    <!-- favorite delete button -->
+                    <form action="{{ route('favorite.destroy', $product->id) }}" method="post">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="favorite-icon active">
+                            @include('components.icons.favorite')
+                            <span>{{ $product->favorites_count }}</span>
+                        </button>
+                    </form>
+                @else
+                    <!-- favorite register button -->
+                    <form action="{{ route('favorite.store', $product->id) }}" method="post">
+                        @csrf
+                        <button type="submit" class="favorite-icon">
+                            @include('components.icons.favorite')
+                            <span>{{ $product->favorites_count }}</span>
+                        </button>
+                    </form>
+                @endif
             </div>
 
-            <!-- 購入ボタン -->
-            <button class="purchase-button">購入手続きへ</button>
+            <!-- comment -->
+            <div class="comment-icon {{ $product->comments->contains('user_id', Auth::id()) ? 'active' : '' }}">
+                @include('components.icons.comment')
 
-            <!-- 商品説明 -->
+                <span>{{ $product->comments_count }}</span>
+            </div>
+
+            <!-- button for the purchase page -->
+            <a href="{{ route('purchase.show', ['product' => $product->id]) }}" class="purchase-button">
+                購入手続きへ
+            </a>
+
+            <!-- product description -->
             <div class="product-description">
                 <h2>商品説明</h2>
-                <p>カラー：グレー</p>
-                <p>新品</p>
-                <p>商品の状態は良好です。傷もありません。</p>
-                <p>購入後、即発送いたします。</p>
+                <p>{{ $product->description }}</p>
             </div>
 
-            <!-- 商品の情報 -->
+            <!-- product categori and status -->
             <div class="product-details">
                 <h2>商品の情報</h2>
-                <p>カテゴリー：
-                    <span class="category-tag">洋服</span>
-                    <span class="category-tag">メンズ</span>
+                <p>カテゴリー
+                    @foreach ($product->categories as $category)
+                        <p class="category-tag">{{ $category->category_name }}</p>
+                    @endforeach
                 </p>
-                <p>商品の状態： <span class="condition">良好</span></p>
+                <p>商品の状態
+                    <p class="condition">{{ $product->status }}</p>
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- コメントエリア -->
+    <!-- product comment -->
     <div class="product-comments">
-        <h2>コメント (1)</h2>
-        <div class="comment">
-            <div class="comment-user">
-                <img src="{{ asset('images/default-user.png') }}" alt="ユーザーアイコン" class="user-icon">
-                <span class="username">admin</span>
-            </div>
-            <p class="comment-text">こちらにコメントが入ります。</p>
-        </div>
+        <h2>コメント ({{ $product->comments_count }})</h2>
 
-        <!-- コメント入力フォーム -->
-        <div class="comment-form">
+        @foreach ($randomComments as $comment)
+            <div class="comment">
+                <div class="comment-user">
+                    <img src="{{ asset('storage/' . ($comment->user->profile_image)) }}"
+                        alt="ユーザーアイコン" class="user-icon">
+                    <span class="username">{{ $comment->user->name }}</span>
+                </div>
+                <p class="comment-text">{{ $comment->comment }}</p>
+            </div>
+        @endforeach
+
+        <!-- input comment -->
+        <form action="{{ route('comment.store', ['product' => $product->id]) }}" method="POST" class="comment-form">
+            @csrf
             <label for="comment">商品のコメント</label>
-            <textarea id="comment" name="comment" rows="4"></textarea>
-            <button class="submit-comment-button">コメントを送信する</button>
-        </div>
+            <textarea id="comment" name="comment"></textarea>
+
+            <!-- validation -->
+            @error('comment')
+                <div class="form__error">
+                    <p class="form__error-msg">{{ $message }}</p>
+                </div>
+            @enderror
+
+            <button type="submit" class="submit-comment-button">コメントを送信する</button>
+        </form>
     </div>
 </main>
 @endsection
