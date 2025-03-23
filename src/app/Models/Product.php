@@ -42,6 +42,18 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(Order::class);
+    }
+
+    // Scope a query to exclude products owned by a specific user
+    public function scopeExcludeOwn($query, $userId)
+    {
+        return $query->where('user_id', '!=', $userId);
+    }
+
+    // Scope a query to search products by keyword in the product name
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('product_name', 'like', "%$keyword%");
     }
 }
