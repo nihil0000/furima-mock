@@ -7,6 +7,8 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,20 +21,20 @@ use App\Http\Controllers\PurchaseController;
 |
 */
 
-// auth
+// Auth
 Route::controller(AuthenticatedSessionController::class)->group(function () {
     Route::get('/login', 'create')->name('login.create'); // display login form
     Route::post('/login', 'store')->name('login.store'); // authentication (login)
     Route::post('/logout', 'destroy')->name('logout.destroy'); // logout
 });
 
-// register
+// Register
 Route::controller(RegisteredUserController::class)->group(function () {
     Route::get('/register', 'create')->name('register.create'); // display register form
     Route::post('/register', 'store')->name('register.store');  // register
 });
 
-// profile
+// Profile
 Route::middleware('auth')
     ->controller(ProfileController::class)
     ->group(function () {
@@ -41,7 +43,7 @@ Route::middleware('auth')
         Route::post('/mypage', 'store')->name('profile.store');  // register　the profile
 });
 
-// product
+// Product
 Route::controller(ProductController::class)->group(function () {
     Route::get('/', 'index')->name('product.index'); // display the product list
     Route::get('/product/{product}', 'show')->name('product.show'); // display details of product
@@ -52,7 +54,20 @@ Route::controller(ProductController::class)->group(function () {
     });
 });
 
-// purchase
+// Favorite
+Route::middleware('auth')
+    ->controller(FavoriteController::class)
+    ->group(function () {
+        Route::post('/favorite/{product}', 'store')->name('favorite.store');
+        Route::delete('/favorite/{product}', 'destroy')->name('favorite.destroy');
+});
+
+// Comment
+Route::middleware('auth')->group(function () {
+    Route::post('/comment/{product}', [CommentController::class, 'store'])->name('comment.store');
+});
+
+// Purchase
 Route::middleware('auth')
     ->controller(PurchaseController::class)
     ->group(function () {
@@ -60,5 +75,3 @@ Route::middleware('auth')
         Route::get('/purchase/{product}', 'show')->name('purchase.show');
         Route::post('/purchase', 'update')->name('purchase.update');
 });
-
-
