@@ -8,9 +8,9 @@
 <main class="profile-container">
     <section class="profile-header">
         <div class="profile-image">
-            <img src="{{ asset('images/default-profile.png') }}" alt="プロフィール画像">
+            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="プロフィール画像">
         </div>
-        <h2 class="profile-name">ユーザー名</h2>
+        <h2 class="profile-name">{{ $user->name }}</h2>
         <a href="{{ route('profile.edit') }}" class="profile-edit-btn">プロフィールを編集</a>
     </section>
 
@@ -31,26 +31,28 @@
         </ul>
     </section>
 
-    {{--
-    @if (request()->query('tab', 'sell') === 'sell')
+    @if (request()->query('tab', 'exhibit') === 'exhibit')
         <section class="product-list">
-            @foreach ($sellProducts as $product)
+            @foreach ($user->products as $product)
                 <div class="product">
-                    <img src="{{ asset($product->image_path ?? 'images/sample-product.png') }}" alt="商品画像">
-                    <p class="product-name">{{ $product->name }}</p>
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                    <p class="product-name">{{ $product->product_name }}</p>
                 </div>
             @endforeach
         </section>
     @else
         <section class="product-list">
-            @foreach ($boughtProducts as $product)
+            @foreach ($user->orders as $order)
+                @php
+                    $product = $order->product;
+                @endphp
+
                 <div class="product">
-                    <img src="{{ asset($product->image_path ?? 'images/sample-product.png') }}" alt="商品画像">
-                    <p class="product-name">{{ $product->name }}</p>
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                    <p class="product-name">{{ $product->product_name }}</p>
                 </div>
             @endforeach
         </section>
     @endif
-    --}}
 </main>
 @endsection
