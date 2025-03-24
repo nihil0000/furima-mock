@@ -47,9 +47,13 @@
             </div>
 
             <!-- button for the purchase page -->
-            <a href="{{ route('purchase.show', ['product' => $product->id]) }}" class="purchase-button">
-                購入手続きへ
-            </a>
+            @if ($product->is_sold)
+                <button class="purchase-button" disabled>sold out</button>
+            @else
+                <a href="{{ route('purchase.show', ['product' => $product->id]) }}" class="purchase-button">
+                    購入手続きへ
+                </a>
+            @endif
 
             <!-- product description -->
             <div class="product-description">
