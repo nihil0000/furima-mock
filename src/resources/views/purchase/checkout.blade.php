@@ -5,53 +5,79 @@
     <h1 class="page-title">商品購入画面</h1>
 
     <div class="purchase-content">
-        <!-- 左側（商品情報 + 支払い方法 + 配送先） -->
+        <!-- purchase details -->
         <section class="purchase-details">
-            <!-- 商品情報 -->
+            <!-- product information -->
             <div class="product-info">
                 <div class="product-image">
-                    <img src="{{ asset('images/sample-product.png') }}" alt="商品画像">
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
                 </div>
                 <div class="product-summary">
-                    <h2 class="product-name">商品名</h2>
-                    <p class="product-price">¥47,000</p>
+                    <h2 class="product-name">{{ $product->product_name }}</h2>
+                    <p class="product-price">¥{{ $product->price }}</p>
                 </div>
             </div>
 
             <!-- 支払い方法選択 -->
             <div class="payment-method">
                 <h3>支払い方法</h3>
-                <select name="payment" required>
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="credit_card">クレジットカード</option>
-                    <option value="convenience_store">コンビニ払い</option>
-                    <option value="bank_transfer">銀行振込</option>
-                </select>
+                <form method="get" action="{{ route('purchase.show', ['product' => $product->id]) }}">
+                    <select name="payment" onchange="this.form.submit()">
+                        <option value="" disabled {{ request('payment') ? '' : 'selected' }}>選択してください</option>
+                        <option value="コンビニ払い" {{ request('payment') === 'コンビニ支払い' ? 'selected' : '' }}>コンビニ支払い</option>
+                        <option value="クレジットカード" {{ request('payment') === 'カード支払い' ? 'selected' : '' }}>カード支払い</option>
+                    </select>
+                </form>
             </div>
 
             <!-- 配送先情報 -->
             <div class="shipping-info">
                 <h3>配送先</h3>
-                <p>〒 XXX-YYYY</p>
-                <p>ここには住所と連絡先が入ります</p>
-                {{-- <a href="{{ route('purchase.create') }}" class="change-address">変更する</a> --}}
-                <a href="#" class="change-address">変更する</a>
+                <p>{{ $address['postal_code'] ?? '登録されていません'}}</p>
+                <p>{{ $address['address'] ?? '登録されていません'}}</p>
+                <p>{{ $address['building'] ?? '登録されていません'}}</p>
+
+                <!-- validation -->
+                @error ('address')
+                    <div class="form__error">
+                        <p class="form__error-msg">{{ $message }}</p>
+                    </div>
+                @enderror
+
+                <a href="{{ route('purchase.create', ['product' => $product->id]) }}" class="change-address">変更する</a>
             </div>
         </section>
 
         <!-- 右側（価格確認 + 購入ボタン） -->
         <aside class="purchase-summary">
-            <table class="summary-table">
-                <tr>
-                    <th>商品代金</th>
-                    <td>¥47,000</td>
-                </tr>
-                <tr>
-                    <th>支払い方法</th>
-                    <td>コンビニ払い</td>
-                </tr>
-            </table>
-            <button type="submit" class="purchase-button">購入する</button>
+            <!-- 購入処理のフォーム -->
+            <form method="post" action="{{ route('purchase.store', ['product' => $product->id]) }}">
+                @csrf
+                <input type="hidden" name="payment" value="{{ request('payment') }}">
+                <input type="hidden" name="postal_code" value="{{ isset($address) ? $address['postal_code'] : '' }}">
+                <input type="hidden" name="address" value="{{ isset($address) ? $address['address'] : '' }}">
+                <input type="hidden" name="building" value="{{ isset($address) ? $address['building'] : '' }}">
+
+                <table class="summary-table">
+                    <tr>
+                        <th>商品代金</th>
+                        <td>¥{{ $product->price }}</td>
+                    </tr>
+                    <tr>
+                        <th>支払い方法</th>
+                        <td>{{ request('payment') ?? '選択されていません' }}</td>
+                    </tr>
+                </table>
+
+                <!-- validation -->
+                @error ('payment')
+                    <div class="form__error">
+                        <p class="form__error-msg">{{ $message }}</p>
+                    </div>
+                @enderror
+
+                <button type="submit" class="purchase-button">購入する</button>
+            </form>
         </aside>
     </div>
 </main>
