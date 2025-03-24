@@ -16,8 +16,9 @@ class AddressFactory extends Factory
     {
         return [
             'user_id' => User::inRandomOrder()->first()->id,
-            'address' => $this->faker->address,
-            'postal_code' => $this->faker->postcode,
+            'postal_code' => sprintf('%03d-%04d', mt_rand(100, 999), mt_rand(0, 9999)),
+            'address' => $this->faker->prefecture . $this->faker->city . $this->faker->streetAddress,
+            'building' => $this->faker->secondaryAddress,
         ];
     }
 }

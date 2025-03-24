@@ -20,8 +20,10 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'product_id' => Product::inRandomOrder()->first()->id,
-            'address_id' => Address::inRandomOrder()->first()->id,
-            'payment_id' => Payment::inRandomOrder()->first()->id,
+            'payment_type' => $this->faker->randomElement(['クレジットカード', 'コンビニ払い', '銀行振込']),
+            'shipping_postal_code' => $this->faker->postcode,
+            'shipping_address' => $this->faker->address,
+            'shipping_building' => $this->faker->secondaryAddress,
         ];
     }
 }
