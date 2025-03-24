@@ -17,6 +17,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 1,
             'product_name' => '腕時計',
+            'brand_name' => 'NeoWear',
             'price' => 15000,
             'description' => 'スタイリッシュなデザインのメンズ腕時計',
             'status' => '良好',
@@ -27,6 +28,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 2,
             'product_name' => 'HDD',
+            'brand_name' => 'UrbanCraft',
             'price' => 5000,
             'description' => '高速で信頼性の高いハードディスク',
             'status' => '目立った傷や汚れなし',
@@ -37,6 +39,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 3,
             'product_name' => '玉ねぎ3束',
+            'brand_name' => 'LumiTech',
             'price' => 300,
             'description' => '新鮮な玉ねぎ3束のセット',
             'status' => 'やや傷や汚れあり',
@@ -47,6 +50,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 4,
             'product_name' => '革靴',
+            'brand_name' => 'ArcoHome',
             'price' => 4000,
             'description' => 'クラシックなデザインの革靴',
             'status' => '状態が悪い',
@@ -57,6 +61,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 5,
             'product_name' => 'ノートPC',
+            'brand_name' => 'Zestique',
             'price' => 45000,
             'description' => '高性能なノートパソコン',
             'status' => '良好',
@@ -67,6 +72,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 6,
             'product_name' => 'マイク',
+            'brand_name' => 'Minoir',
             'price' => 8000,
             'description' => '高音質のレコーディング用マイク',
             'status' => '目立った傷や汚れなし',
@@ -77,6 +83,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 7,
             'product_name' => 'ショルダーバッグ',
+            'brand_name' => 'Solvex',
             'price' => 3500,
             'description' => 'おしゃれなショルダーバッグ',
             'status' => 'やや傷や汚れあり',
@@ -87,6 +94,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 8,
             'product_name' => 'タンブラー',
+            'brand_name' => 'Calyra',
             'price' => 500,
             'description' => '使いやすいタンブラー',
             'status' => '状態が悪い',
@@ -97,6 +105,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 9,
             'product_name' => 'コーヒーミル',
+            'brand_name' => 'Modello',
             'price' => 4000,
             'description' => '手動のコーヒーミル',
             'status' => '良好',
@@ -107,6 +116,7 @@ class ProductsTableSeeder extends Seeder
         $param = [
             'user_id' => 10,
             'product_name' => 'メイクセット',
+            'brand_name' => 'Krafina',
             'price' => 2500,
             'description' => '便利なメイクアップセット',
             'status' => '目立った傷や汚れなし',
