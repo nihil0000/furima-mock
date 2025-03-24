@@ -71,7 +71,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')
     ->controller(PurchaseController::class)
     ->group(function () {
-        Route::get('/purchase/address/{product_id}', 'create')->name('purchase.create');
+        Route::get('/purchase/address/{product}', 'create')->name('purchase.create');
+        Route::post('/purchase/address/update/{product}', 'update')->name('purchase.update');
         Route::get('/purchase/{product}', 'show')->name('purchase.show');
-        Route::post('/purchase', 'update')->name('purchase.update');
+        Route::post('/purchase/{product}', 'store')->name('purchase.store');
 });
