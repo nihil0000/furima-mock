@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\PurchaseRequest;
-use App\Http\Requests\AddressRequest;
+use App\Http\Requests\ShipAddressRequest;
 use App\Models\Product;
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
@@ -15,7 +14,7 @@ class PurchaseController extends Controller
     public function show(Product $product)
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = auth()->user();
         $user->load('address');
 
         $sessionKey = 'purchase_address_' . $product->id;
@@ -35,7 +34,7 @@ class PurchaseController extends Controller
     public function create(Product $product)
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = auth()->user();
         $user->load('address');
 
         $sessionKey = 'purchase_address_' . $product->id;
@@ -52,7 +51,7 @@ class PurchaseController extends Controller
 
 
     // Edit address
-    public function update(AddressRequest $request, Product $product)
+    public function update(ShipAddressRequest $request, Product $product)
     {
         session([
             'purchase_address_' . $product->id => [
@@ -70,7 +69,7 @@ class PurchaseController extends Controller
     public function store(PurchaseRequest $request, Product $product)
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = auth()->user();
 
         $address = session('purchase_address');
 
