@@ -17,11 +17,11 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('product_name', 255);
-            $table->string('brand_name', 255)->nullable();
+            $table->string('brand_name', 255);
             $table->unsignedInteger('price');
             $table->text('description');
             $table->string('status', 50);
-            $table->string('image', 255)->nullable();
+            $table->string('image', 255);
             $table->boolean('is_sold')->default(0);
             $table->timestamps();
         });

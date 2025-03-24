@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ExhibitionRequest;
 use App\Models\Product;
-use App\Models\Favorite;
-use App\Models\Comment;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -40,7 +40,7 @@ class ProductController extends Controller
             return view('product.index', compact('favorites', 'query'));
         }
 
-        $products =Product::query();
+        $products = Product::query();
 
         if (auth()->check()) {
             $products->excludeOwn(auth()->id());
@@ -55,6 +55,7 @@ class ProductController extends Controller
         return view('product.index', compact('products', 'query'));
     }
 
+
     // Show product details
     public function show(Product $product)
     {
@@ -66,13 +67,37 @@ class ProductController extends Controller
         return view('product.show', compact('product', 'randomComments'));
     }
 
+
+    // Display to exhibit product page
     public function create()
     {
-        return view('product.register');
+        $categories = Category::all();
+
+        return view('product.register', compact('categories'));
     }
 
-    public function store()
+
+    // Register the product
+    public function store(ExhibitionRequest $request)
     {
+        $user = auth()->user();
+
+        $file = $request->image;
+        $filename = $file->getClientOriginalName(); // Get the original filename of the uploaded file
+        $file->storeAs('public/images', $filename); // Store the uploaded file
+
+        $product = Product::create([
+            'user_id' => $user->id,
+            'product_name' => $request->product_name,
+            'brand_name' => $request->brand_name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'status' => $request->status,
+            'image' => 'images/' . $filename,
+        ]);
+
+        $product->categories()->attach($request->category);
+
         return redirect()->route('product.index');
     }
 }
