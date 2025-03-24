@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Favorite;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -17,12 +16,12 @@ class ProductController extends Controller
         $query = $request->query('query');
 
         if ($tab === 'mylist') {
-            if (!Auth::check()) {
+            if (!auth()->check()) {
                 return redirect()->guest(route('login.create'));
             }
 
             /** @var \App\Models\User $user */
-            $user = Auth::user();
+            $user = auth()->user();
 
             // Apply search scope to product
             $favorites = $user->favorites()
@@ -31,8 +30,8 @@ class ProductController extends Controller
                         $q->search($query);
                     }
 
-                    if (Auth::check()) {
-                        $q->excludeOwn(Auth::id());
+                    if (auth()->check()) {
+                        $q->excludeOwn(auth()->id());
                     }
                 })
                 ->with('product')
@@ -43,8 +42,8 @@ class ProductController extends Controller
 
         $products =Product::query();
 
-        if (Auth::check()) {
-            $products->excludeOwn(Auth::id());
+        if (auth()->check()) {
+            $products->excludeOwn(auth()->id());
         }
 
         if (!empty($query)) {

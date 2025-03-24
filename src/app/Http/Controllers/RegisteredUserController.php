@@ -25,7 +25,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user);
+        auth()->login($user);
 
         return redirect()->route('profile.edit');
     }
