@@ -32,24 +32,36 @@
     </section>
 
     @if (request()->query('tab', 'exhibit') === 'exhibit')
-        <section class="product-list">
+        <section class="product-list__grid">
             @foreach ($user->products as $product)
-                <div class="product">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
-                    <p class="product-name">{{ $product->product_name }}</p>
+                <div class="product-card">
+                    <a href="{{ route('product.show', ['product' => $product->id]) }}">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                        <p class="product-name">{{ $product->product_name }}</p>
+
+                        @if ($product->is_sold)
+                            <span class="sold-label">Sold</span>
+                        @endif
+                    </a>
                 </div>
             @endforeach
         </section>
     @else
-        <section class="product-list">
+        <section class="product-list__grid">
             @foreach ($user->orders as $order)
                 @php
                     $product = $order->product;
                 @endphp
 
-                <div class="product">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
-                    <p class="product-name">{{ $product->product_name }}</p>
+                <div class="product-card">
+                    <a href="{{ route('product.show', ['product' => $product->id]) }}">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
+                        <p class="product-name">{{ $product->product_name }}</p>
+
+                        @if ($product->is_sold)
+                            <span class="sold-label">Sold</span>
+                        @endif
+                    </a>
                 </div>
             @endforeach
         </section>
