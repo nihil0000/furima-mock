@@ -71,15 +71,15 @@ class PurchaseController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $address = session('purchase_address');
+        // $address = session('purchase_address');
 
         Order::create([
             'user_id'          => $user->id,
             'product_id'       => $product->id,
             'payment_type'     => $request->payment,
-            'shipping_postal_code' => $address['postal_code'],
-            'shipping_address'     => $address['address'],
-            'shipping_building'    => $address['building'],
+            'shipping_postal_code' => $request->postal_code,
+            'shipping_address'     => $request->address,
+            'shipping_building'    => $request->building,
         ]);
 
         $product->is_sold = true;

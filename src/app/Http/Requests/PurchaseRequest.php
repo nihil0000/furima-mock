@@ -25,6 +25,7 @@ class PurchaseRequest extends FormRequest
     {
         return [
             'payment' => 'required',
+            'address' => 'required',
         ];
     }
 
@@ -32,6 +33,7 @@ class PurchaseRequest extends FormRequest
     {
         return [
             'payment.required' => '支払い方法を選択してください',
+            'address.required' => '配送先住所を登録してください',
         ];
     }
 }
