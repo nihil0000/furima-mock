@@ -40,7 +40,7 @@ class Product extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function orders()
+    public function order()
     {
         return $this->belongsTo(Order::class);
     }
