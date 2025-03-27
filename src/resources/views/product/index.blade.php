@@ -9,12 +9,12 @@
 
     <!-- navigation tabs -->
     <div class="product-tabs">
-        <a href="{{ route('product.index', ['tab' => 'recommend', 'query' => request('query')]) }}"
-            class="{{ request()->query('tab', 'recommend') === 'recommend' ? 'active-tab' : '' }}">
+        <a href="{{ route('product.index', ['page' => 'recommend', 'query' => request('query')]) }}"
+            class="{{ request()->query('page', 'recommend') === 'recommend' ? 'active-page' : '' }}">
             おすすめ
         </a>
-        <a href="{{ route('product.index', ['tab' => 'mylist', 'query' => request('query')]) }}"
-            class="{{ request()->query('tab') === 'mylist' ? 'active-tab' : '' }}">
+        <a href="{{ route('product.index', ['page' => 'mylist', 'query' => request('query')]) }}"
+            class="{{ request()->query('page') === 'mylist' ? 'active-page' : '' }}">
             マイリスト
         </a>
     </div>
@@ -24,7 +24,7 @@
         <p class="search-keyword">「{{ $query }}」の検索結果</p>
     @endif
 
-    @if (request()->query('tab', 'recommend') === 'recommend')
+    @if (request()->query('page', 'recommend') === 'recommend')
         <!-- show recommended products -->
         <section class="product-list__grid">
             @foreach ($products as $product)

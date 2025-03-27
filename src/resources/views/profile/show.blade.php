@@ -16,22 +16,18 @@
 
     <section class="profile-tabs">
         <ul class="tabs">
-            <li>
-                <a href="{{ route('profile.show', ['tab' => 'exhibit']) }}"
-                    class="{{ request()->query('tab', 'exhibit') === 'exhibit' ? 'active' : '' }}">
-                    出品した商品
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('profile.show', ['tab' => 'order']) }}"
-                    class="{{ request()->query('tab') === 'order' ? 'active' : '' }}">
-                    購入した商品
-                </a>
-            </li>
+            <a href="{{ route('profile.show', ['page' => 'exhibit']) }}"
+                class="{{ request()->query('page', 'exhibit') === 'exhibit' ? 'active' : '' }}">
+                出品した商品
+            </a>
+            <a href="{{ route('profile.show', ['page' => 'order']) }}"
+                class="{{ request()->query('page') === 'order' ? 'active' : '' }}">
+                購入した商品
+            </a>
         </ul>
     </section>
 
-    @if (request()->query('tab', 'exhibit') === 'exhibit')
+    @if (request()->query('page', 'exhibit') === 'exhibit')
         <section class="product-list__grid">
             @foreach ($user->products as $product)
                 <div class="product-card">
@@ -57,10 +53,6 @@
                     <a href="{{ route('product.show', ['product' => $product->id]) }}">
                         <img src="{{ asset('storage/' . $product->image) }}" alt="商品画像">
                         <p class="product-name">{{ $product->product_name }}</p>
-
-                        @if ($product->is_sold)
-                            <span class="sold-label">Sold</span>
-                        @endif
                     </a>
                 </div>
             @endforeach
