@@ -13,7 +13,7 @@
         <div class="product-info">
             <h1 class="product-title">{{ $product->product_name }}</h1>
             <p class="product-brand">{{ $product->brand_name }}</p>
-            <p class="product-price">¥{{ $product->price }} <span class="tax-included">（税込）</span></p>
+            <p class="product-price">¥{{ number_format($product->price) }} <span class="tax-included">（税込）</span></p>
 
             <!-- favorite -->
             <div class="favorite-container">

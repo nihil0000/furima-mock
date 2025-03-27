@@ -14,7 +14,7 @@
                 </div>
                 <div class="product-summary">
                     <h2 class="product-name">{{ $product->product_name }}</h2>
-                    <p class="product-price">¥{{ $product->price }}</p>
+                    <p class="product-price">¥{{ number_format($product->price) }}</p>
                 </div>
             </div>
 
@@ -24,8 +24,8 @@
                 <form method="get" action="{{ route('purchase.show', ['product' => $product->id]) }}">
                     <select name="payment" onchange="this.form.submit()">
                         <option value="" disabled {{ request('payment') ? '' : 'selected' }}>選択してください</option>
-                        <option value="コンビニ払い" {{ request('payment') === 'コンビニ支払い' ? 'selected' : '' }}>コンビニ支払い</option>
-                        <option value="クレジットカード" {{ request('payment') === 'カード支払い' ? 'selected' : '' }}>カード支払い</option>
+                        <option value="コンビニ支払い" {{ request('payment') === 'コンビニ支払い' ? 'selected' : '' }}>コンビニ支払い</option>
+                        <option value="カード支払い" {{ request('payment') === 'カード支払い' ? 'selected' : '' }}>カード支払い</option>
                     </select>
                 </form>
             </div>
@@ -33,12 +33,26 @@
             <!-- 配送先情報 -->
             <div class="shipping-info">
                 <h3>配送先</h3>
-                <p>{{ $address['postal_code'] ?? '登録されていません'}}</p>
-                <p>{{ $address['address'] ?? '登録されていません'}}</p>
-                <p>{{ $address['building'] ?? '登録されていません'}}</p>
+
+                @if (empty($address['postal_code']) || empty($address['address']) || empty($address['building']))
+                    <p>登録されていません</p>
+                @else
+                    <p>〒 {{ $address['postal_code'] }}</p>
+                    <p>{{ $address['address'] . $address['building'] }}</p>
+                @endif
 
                 <!-- validation -->
+                @error ('postal_code')
+                    <div class="form__error">
+                        <p class="form__error-msg">{{ $message }}</p>
+                    </div>
+                @enderror
                 @error ('address')
+                    <div class="form__error">
+                        <p class="form__error-msg">{{ $message }}</p>
+                    </div>
+                @enderror
+                @error ('building')
                     <div class="form__error">
                         <p class="form__error-msg">{{ $message }}</p>
                     </div>
@@ -61,7 +75,7 @@
                 <table class="summary-table">
                     <tr>
                         <th>商品代金</th>
-                        <td>¥{{ $product->price }}</td>
+                        <td>¥{{ number_format($product->price) }}</td>
                     </tr>
                     <tr>
                         <th>支払い方法</th>
