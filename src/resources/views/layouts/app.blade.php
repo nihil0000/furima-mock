@@ -4,54 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     @yield('css')
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>furima</title>
 </head>
 
-<body>
-    <header class="header">
-        <div class="header__inner">
-            <a href="{{ route('product.index') }}" class="header__logo">
-                <img src="{{ asset('images/logo.svg') }}" alt="ロゴ">
+<body class="font-slab">
+    <header class="bg-black text-white py-4">
+        <div class="max-w-[1200px] mx-auto flex flex-col xl:flex-row items-center justify-between">
+
+            <!-- logo -->
+            <a href="{{ route('product.index') }}" class="self-center xl:self-auto">
+                <img src="{{ asset('images/logo.svg') }}" alt="ロゴ" class="h-8">
             </a>
 
-            <!-- Display search bar in header (except on login and registration pages) -->
+            <!-- show search bar in header (except on login and registration pages) -->
             @unless (Request::is('login') || Request::is('register'))
-                <form action="{{ route('product.index') }}" method="get" class="header__search">
-                    <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}">
-                    <button type="submit">検索</button>
+                <form action="{{ route('product.index') }}" method="get" class="flex items-center space-x-2">
+                    <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}"
+                        class="my-4 h-8 w-full md:w-60 xl:w-80 rounded text-black px-4 text-sm" />
+                    <button type="submit"
+                        class="bg-white text-black h-8 px-4 py-1 rounded hover:bg-gray-100">検索</button>
                 </form>
             @endunless
 
-            <nav class="header__nav">
+            <nav class="flex items-center space-x-5">
                 @auth
-                    <!-- Show only for authenticated users -->
-                    <a href="{{ route('logout.destroy') }}" class="header__button"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        ログアウト
-                    </a>
-                    <a href="{{ route('profile.show') }}" class="header__button">マイページ</a>
-                    <a href="{{ route('product.create') }}" class="header__button">出品</a>
-                    <form action="{{ route('logout.destroy') }}" id="logout-form" method="post">
+                    <!-- show only for authenticated users -->
+                    <a href="{{ route('logout.destroy') }}" class="hover:underline"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+                    <a href="{{ route('profile.show') }}" class="hover:underline">マイページ</a>
+                    <a href="{{ route('product.create') }}"
+                        class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200">出品</a>
+                    <form action="{{ route('logout.destroy') }}" id="logout-form" method="post" class="hidden">
                         @csrf
                     </form>
                 @endauth
 
                 @guest
                     @if (Request::routeIs('product.index') || Request::routeIs('product.show'))
-                        <!-- Show only for guests on product list or detail pages -->
-                        <a href="{{ route('login.create') }}" class="header__button">ログイン</a>
-                        <a href="{{ route('profile.show') }}" class="header__button">マイページ</a>
-                        <a href="{{ route('product.create') }}" class="header__button">出品</a>
+                        <!-- show only for guests on product list or detail pages -->
+                        <a href="{{ route('login.create') }}" class="hover:underline">ログイン</a>
+                        <a href="{{ route('profile.show') }}" class="hover:underline">マイページ</a>
+                        <a href="{{ route('product.create') }}"
+                            class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 h-8">出品</a>
                     @endif
                 @endguest
             </nav>
