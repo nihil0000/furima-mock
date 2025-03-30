@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
         // Authentication failed
         return back()->withErrors([
             'email' => 'ログイン情報が登録されていません。'
-        ]);
+        ])->withInput();
     }
 
     // Logout

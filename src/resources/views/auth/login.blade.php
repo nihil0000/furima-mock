@@ -1,12 +1,12 @@
 @extends('layouts/app')
 
 @section('content')
-<main class="min-h-[calc(100vh-64px)] bg-white flex justify-center px-4">
-    <div class="w-full max-w-xl my-28 space-y-6">
+<main class="min-h-[calc(100vh-144px)] bg-white px-4">
+    <div class="w-full max-w-xl mx-auto my-20 space-y-6">
         <h1 class="text-2xl font-bold text-center">ログイン</h1>
 
         <!-- login form -->
-        <section class="login-form">
+        <section>
             <form action="{{ route('login.store') }}" method="post" novalidate class="space-y-4">
                 @csrf
 
