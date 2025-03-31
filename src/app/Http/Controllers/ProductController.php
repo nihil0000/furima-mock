@@ -12,7 +12,7 @@ class ProductController extends Controller
     // Display product list
     public function index(Request $request)
     {
-        $tab = $request->query('tab', 'recommend');
+        $tab = $request->query('page', 'recommend');
         $query = $request->query('query');
 
         if ($tab === 'mylist') {
@@ -62,9 +62,15 @@ class ProductController extends Controller
         $product->loadCount(['favorites', 'comments']);
         $product->load(['categories', 'comments.user']);
 
-        $randomComments = $product->comments->shuffle()->take(3);
+        $isFavorited = $product->favorites->contains('user_id', auth()->id());
 
-        return view('product.show', compact('product', 'randomComments'));
+        $latestComments = $product->comments()
+            ->with('user')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('product.show', compact('product', 'isFavorited', 'latestComments'));
     }
 
 
