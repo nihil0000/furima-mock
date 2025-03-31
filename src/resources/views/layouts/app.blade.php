@@ -13,7 +13,7 @@
     <title>furima</title>
 </head>
 
-<body class="font-slab">
+<body class="min-h-screen flex flex-col font-slab">
     <header class="bg-black text-white py-4">
         <div class="max-w-[1200px] mx-auto flex flex-col xl:flex-row items-center justify-between">
 
@@ -28,18 +28,30 @@
                     <input type="text" name="query" placeholder="なにをお探しですか？" value="{{ request('query') }}"
                         class="my-4 h-8 w-full md:w-60 xl:w-80 rounded text-black px-4 text-sm" />
                     <button type="submit"
-                        class="bg-white text-black h-8 px-4 py-1 rounded hover:bg-gray-100">検索</button>
+                        class="bg-white text-black h-8 px-4 py-1 rounded hover:bg-gray-100 text-sm md:text-base whitespace-nowrap">
+                        検索
+                    </button>
                 </form>
             @endunless
 
             <nav class="flex items-center space-x-5">
                 @auth
                     <!-- show only for authenticated users -->
-                    <a href="{{ route('logout.destroy') }}" class="hover:underline"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
-                    <a href="{{ route('profile.show') }}" class="hover:underline">マイページ</a>
+                    <a href="{{ route('logout.destroy') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        class="hover:underline text-sm md:text-base whitespace-nowrap">
+                        ログアウト
+                    </a>
+
+                    <a href="{{ route('profile.show') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                        マイページ
+                    </a>
+
                     <a href="{{ route('product.create') }}"
-                        class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200">出品</a>
+                        class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 text-sm md:text-base whitespace-nowrap">
+                        出品
+                    </a>
+
                     <form action="{{ route('logout.destroy') }}" id="logout-form" method="post" class="hidden">
                         @csrf
                     </form>
