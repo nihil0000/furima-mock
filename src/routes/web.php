@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,36 +22,36 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-// Auth
+// Authentication (login, logout)
 Route::controller(AuthenticatedSessionController::class)->group(function () {
-    Route::get('/login', 'create')->name('login.create'); // display login form
-    Route::post('/login', 'store')->name('login.store'); // authentication (login)
-    Route::post('/logout', 'destroy')->name('logout.destroy'); // logout
+    Route::get('/login', 'create')->name('login.create'); // Display login form
+    Route::post('/login', 'store')->name('login.store'); // Authentication (login)
+    Route::post('/logout', 'destroy')->name('logout.destroy'); // Logout
 });
 
-// Register
+// Register the product
 Route::controller(RegisteredUserController::class)->group(function () {
-    Route::get('/register', 'create')->name('register.create'); // display register form
-    Route::post('/register', 'store')->name('register.store');  // register
+    Route::get('/register', 'create')->name('register.create'); // Display register form
+    Route::post('/register', 'store')->name('register.store');  // Register
 });
 
 // Profile
 Route::middleware('auth')
     ->controller(ProfileController::class)
     ->group(function () {
-        Route::get('/mypage', 'show')->name('profile.show'); // display the profile
-        Route::get('/mypage/profile', 'edit')->name('profile.edit');  // display to edit　the profile
-        Route::post('/mypage', 'store')->name('profile.store');  // register　the profile
+        Route::get('/mypage', 'show')->name('profile.show'); // Display the profile
+        Route::get('/mypage/profile', 'edit')->name('profile.edit');  // Display to edit　the profile
+        Route::post('/mypage', 'store')->name('profile.store');  // Register　the profile
 });
 
 // Product
 Route::controller(ProductController::class)->group(function () {
-    Route::get('/', 'index')->name('product.index'); // display the product list
-    Route::get('/product/{product}', 'show')->name('product.show'); // display details of product
+    Route::get('/', 'index')->name('product.index'); // Display the product list
+    Route::get('/product/{product}', 'show')->name('product.show'); // Display details of product
 
     Route::middleware('auth')->group(function () {
-        Route::get('/exhibit', 'create')->name('product.create'); // exhibit product
-        Route::post('/exhibit', 'store')->name('product.store'); // register product
+        Route::get('/exhibit', 'create')->name('product.create'); // Exhibit product
+        Route::post('/exhibit', 'store')->name('product.store'); // Register product
     });
 });
 
@@ -76,3 +77,18 @@ Route::middleware('auth')
         Route::get('/purchase/{product}', 'show')->name('purchase.show');
         Route::post('/purchase/{product}', 'store')->name('purchase.store');
 });
+
+// Show email verification page
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Verify
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+
+// Notification
+Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');

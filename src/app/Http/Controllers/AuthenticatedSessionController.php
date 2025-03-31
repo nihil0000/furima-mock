@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Auth\Events\Registered;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -21,6 +22,17 @@ class AuthenticatedSessionController extends Controller
 
         // Attempt authentication
         if (auth()->attempt($credentials)) {
+            $user = auth()->user();
+
+            /** @var \App\Models\User|\Illuminate\Contracts\Auth\MustVerifyEmail $user */
+            if (!$user->hasVerifiedEmail()) {
+                event(new Registered($user));
+
+                session()->put('after_verified', 'product.index');
+
+                return redirect()->route('verification.notice');
+            }
+
             $request->session()->regenerate(); // Prevent session fixation attacks
             return redirect()->intended(route('product.index')); // Redirect admin page
         }

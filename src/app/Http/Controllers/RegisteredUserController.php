@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class RegisteredUserController extends Controller
 {
@@ -25,8 +24,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        event(new Registered($user));
         auth()->login($user);
 
-        return redirect()->route('profile.edit');
+        session()->put('after_verified', 'profile.edit');
+
+        return redirect()->route('verification.notice');
     }
 }
