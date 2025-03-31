@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     @yield('css')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 
     <title>furima</title>
 </head>
