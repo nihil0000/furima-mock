@@ -35,7 +35,7 @@ class AddressRequest extends FormRequest
     public function messages()
     {
         return [
-            'user.required' => 'ユーザ名を入力してください',
+            'name.required' => 'ユーザ名を入力してください',
             'image.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
             'postal_code.required' => '郵便番号を入力してください',
             'postal_code.regex' => '郵便番号をハイフンありの8文字で入力してください',
