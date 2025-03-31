@@ -1,102 +1,106 @@
 @extends('layouts/app')
 
-@section('css')
-<link rel="stylesheet" href="{{ asset('css/profile/edit.css') }}">
-@endsection
-
 @section('content')
-<main class="profile-edit-container">
-    <p class="title">プロフィール設定</p>
+<main class="flex-grow px-4">
+    <div class="w-full max-w-xl mx-auto pt-20 pb-8">
+        <h1 class="text-2xl font-bold text-center">プロフィール設定</h1>
 
-    <section class="profile-header">
-
-    </section>
-
-    <!-- profile edit form -->
-    <section class="form">
-        <form action="{{ route('profile.store') }}" class="form__body" method="post" enctype="multipart/form-data">
+        <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
-            <!-- image -->
-            <div class="profile-image">
-                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="profile-img">
-
-                <label for="image" class="image-upload-label">画像を選択する</label>
-                <input type="file" id="image" name="image">
-
-                <!-- validation message -->
-                @error('image')
-                    <p class="form__error-msg">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- user name -->
-            <div class="form__group">
-                <p class="form__group-label">ユーザー名</p>
-
-                <div class="form__group-item">
-                    <input type="text" class="form__input" name="name" value="{{ $user->name }}">
+            <!-- profile image -->
+            <section class="flex flex-col items-center space-y-4">
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
+                    @if ($user->profile_image)
+                        <img src="{{ asset('storage/' . $user->profile_image) }}"
+                            alt="{{ $user->name }}"
+                            class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-sm">
+                            No Image
+                        </div>
+                    @endif
                 </div>
 
-                <!-- validation -->
-                @error('name')
-                <div class="form__error">
-                    <p class="form__error-msg">{{ $message }}</p>
-                </div>
-                @enderror
-            </div>
+                <div class="flex flex-col items-center space-y-2">
+                    <label for="image"
+                        class="cursor-pointer inline-block text-red-500 border border-red-300 text-xs px-4 py-1 rounded hover:bg-red-100 transition">
+                        画像を選択する
+                    </label>
+                    <input type="file" id="image" name="image" class="hidden">
+                    <p id="file-name" class="text-sm mt-1"></p>
 
-            <!-- postal　code -->
-            <div class="form__group">
-                <div class="form__group-label">
-                    <p class="label__text">郵便番号</p>
+                    <!-- validation message -->
+                    @error('image')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div class="postal-code-input">
+            </section>
+
+            <!-- profile edit form (user name, postal code, address, building) -->
+            <section class="space-y-4">
+                <!-- user name -->
+                <div>
+                    <label for="user_name" class="block font-semibold mb-1">ユーザー名</label>
+
+                    <input type="text" name="name" id="user_name" value="{{ $user->name }}"
+                        class="w-full h-10 border border-gray-400 rounded px-3 text-sm">
+
+                    <!-- validation -->
+                    @error('name')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- postal code -->
+                <div>
+                    <label for="postal_code" class="block font-semibold mb-1">郵便番号</label>
+
                     <input type="text" name="postal_code" placeholder="例: 123-4567"
-                            value="{{ old('postal_code', optional($user->address)->postal_code) }}">
-                </div>
-                <div class="postal-code-form__error">
+                                value="{{ old('postal_code', optional($user->address)->postal_code) }}" id="postal_code"
+                                class="w-full h-10 border border-gray-400 rounded px-3 text-sm">
+
+                    <!-- validation -->
                     @error('postal_code')
-                        <p class="form__error-msg">{{ $message }}</p>
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <!-- address -->
-            <div class="form__group">
-                <div class="form__group-label">
-                    <p class="label__text">住所</p>
-                </div>
-                <div class="address-input">
-                    <input type="text" name="address" placeholder="例: 東京都渋谷区千駄ヶ谷1-2-3"
-                            value="{{ old('address', optional($user->address)->address) }}">
-                </div>
-                <div class="address-form__error">
+                <!-- address -->
+                <div>
+                    <label for="address" class="block font-semibold mb-1">住所</label>
+
+                    <input type="text" name="address" placeholder="例: 東京都渋谷区千駄ヶ谷1-2-3" id="address"
+                        value="{{ old('address', optional($user->address)->address) }}"
+                        class="w-full h-10 border border-gray-400 rounded px-3 text-sm">
+
                     @error('address')
-                        <p class="form__error-msg">{{ $message }}</p>
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <!-- building name -->
-            <div class="form__group">
-                <div class="form__group-label">
-                    <p class="label__text">建物名</p>
-                </div>
-                <div class="form__group-item">
-                    <input type="text" class="building-name-input" name="building"
-                            placeholder="例: 千駄ヶ谷マンション101"
-                            value="{{ old('building', optional($user->address)->building) }}">
-                </div>
-                <div class="address-form__error">
+                <!-- building -->
+                <div>
+                    <label for="building" class="block font-semibold mb-1">建物名</label>
+
+                    <input type="text" name="building" placeholder="例: 千駄ヶ谷マンション101" id="building"
+                        value="{{ old('building', optional($user->address)->building) }}"
+                        class="w-full h-10 border border-gray-400 rounded px-3 text-sm">
+
                     @error('building')
-                        <p class="form__error-msg">{{ $message }}</p>
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <button type="submit" class="update-button">更新する</button>
+                <!-- submit button-->
+                <div class="pt-8">
+                    <button type="submit"
+                        class="w-full bg-red-500 text-white h-10 rounded hover:bg-red-400 transition text-sm font-semibold">
+                        更新する
+                    </button>
+                </div>
+            </section>
         </form>
-    </section>
+    </div>
 </main>
 @endsection
