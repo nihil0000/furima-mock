@@ -1,17 +1,17 @@
 @extends('layouts/app')
 
 @section('content')
-<main class="min-h-[calc(100vh-144px)] bg-white px-4">
+<main class="flex-grow px-4">
     <div class="w-full max-w-xl mx-auto my-20 space-y-6">
         <h1 class="text-2xl font-bold text-center">会員登録</h1>
 
         <!-- register form -->
-        <section>
+        <div>
             <form action="{{ route('register.create') }}" method="post" novalidate class="space-y-4">
                 @csrf
 
                 <!-- user name -->
-                <div>
+                <section>
                     <label for="user_name" class="block font-semibold mb-1">ユーザー名</label>
 
                     <input type="text" name="name" id="user_name" placeholder="例: 山田 太郎" value="{{ old('name') }}"
@@ -21,10 +21,10 @@
                     @error('name')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </section>
 
                 <!-- email -->
-                <div>
+                <section>
                     <label for="email" class="block font-semibold mb-1">メールアドレス</label>
 
                     <input type="email" name="email" id="email" placeholder="例: test@example.com"
@@ -34,41 +34,41 @@
                     @error('email')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </section>
 
                 <!-- password -->
-                <div>
+                <section>
                     <label for="password" class="block font-semibold mb-1">パスワード</label>
 
                     <input type="password" name="password" id="password" placeholder="例: coachtech1106"
-                        class="w-full h-10 border border-gray-400 px-3 text-sm">
+                        class="w-full h-10 border border-gray-400 px-3 text-sm rounded">
 
                     <!-- validation -->
                     @error('password')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </section>
 
                 <!-- confirm password -->
-                <div>
+                <section>
                     <label for="confirmed_password" class="block font-semibold mb-1">確認用パスワード</label>
 
                     <input type="password" id="confirmed_password" name="password_confirmation"
-                        class="w-full h-10 border border-gray-400 px-3">
+                        class="w-full h-10 border border-gray-400 px-3 rounded">
 
                     <!-- validation -->
                     @error('password_confirmation')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </section>
 
                 <!-- submit -->
-                <div>
+                <section>
                     <button type="submit"
                         class="w-full h-10 bg-red-500 text-white rounded hover:bg-red-400 transition text-sm font-semibold mt-8">
                         登録する
                     </button>
-                </div>
+                </section>
 
                 <!-- link to login -->
                 <a href="{{ route('login.create') }}"
@@ -76,7 +76,7 @@
                     ログインはこちら
                 </a>
             </form>
-        </section>
+        </div>
     </div>
 </main>
 @endsection
