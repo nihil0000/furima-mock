@@ -23,7 +23,7 @@ docker compose up -d --build
 docker compose exec php bash
 
 # 依存関係をインストール
-composer install`
+composer install
 
 # .env ファイルを作成し、環境変数を設定
 cp .env.example .env
@@ -33,6 +33,7 @@ DB_HOST=mysql
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
+MAIL_FROM_ADDRESS=test@example.com
 
 # アプリケーションキーを生成
 php artisan key:generate
