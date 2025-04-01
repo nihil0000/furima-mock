@@ -60,10 +60,10 @@
                     <h3 class="font-semibold mb-2">商品の状態</h3>
                     <select name="status" class="w-full max-w-sm border border-gray-400 px-3 py-2 rounded">>
                         <option value="" disabled selected>選択してください</option>
-                        <option value="良好">良好</option>
-                        <option value="目立った傷や汚れなし" {{ old('status') === 'goods' ? 'selected' : '' }}>目立った傷や汚れなし</option>
-                        <option value="やや傷や汚れあり" {{ old('status') === 'fair' ? 'selected' : '' }}>やや傷や汚れあり</option>
-                        <option value="状態が悪い" {{ old('status') === 'bad' ? 'selected' : '' }}>状態が悪い</option>
+                        <option value="良好" {{ old('status') === '良好' ? 'selected' : '' }}>良好</option>
+                        <option value="目立った傷や汚れなし" {{ old('status') === '目立った傷や汚れなし' ? 'selected' : '' }}>目立った傷や汚れなし</option>
+                        <option value="やや傷や汚れあり" {{ old('status') === 'やや傷や汚れあり' ? 'selected' : '' }}>やや傷や汚れあり</option>
+                        <option value="状態が悪い" {{ old('status') === '状態が悪い' ? 'selected' : '' }}>状態が悪い</option>
                     </select>
 
                     <!-- validation message -->

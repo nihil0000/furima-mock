@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
-    private function getRedirectRoute(): string
+    private function getRedirectRoute()
     {
         return session()->pull('after_verified', 'product.index');
     }
