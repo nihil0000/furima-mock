@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
@@ -29,7 +28,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
     Route::post('/logout', 'destroy')->name('logout.destroy'); // Logout
 });
 
-// Register the product
+// Register user
 Route::controller(RegisteredUserController::class)->group(function () {
     Route::get('/register', 'create')->name('register.create'); // Display register form
     Route::post('/register', 'store')->name('register.store');  // Register
