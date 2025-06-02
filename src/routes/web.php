@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
@@ -8,7 +10,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,17 +80,19 @@ Route::middleware('auth')
         Route::get('/purchase/{product}/success', 'success')->name('purchase.success');
 });
 
-// Show email verification page
+// Display email verification page
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-// Verify
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->middleware(['auth', 'signed'])
-    ->name('verification.verify');
+// Verify email
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill(); // verify
+    return redirect()->route('product.index');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
-// Notification
-Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
+// Send verification notification
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
