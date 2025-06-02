@@ -75,6 +75,8 @@ Route::middleware('auth')
         Route::post('/purchase/address/update/{product}', 'update')->name('purchase.update');
         Route::get('/purchase/{product}', 'show')->name('purchase.show');
         Route::post('/purchase/{product}', 'store')->name('purchase.store');
+        Route::post('/purchase/{product}/checkout-session', 'createCheckoutSession')->name('purchase.checkout-session');
+        Route::get('/purchase/{product}/success', 'success')->name('purchase.success');
 });
 
 // Show email verification page

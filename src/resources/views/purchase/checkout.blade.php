@@ -59,6 +59,8 @@
                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
 
+                <p id="shipping-error" class="text-sm text-red-500 mt-1 hidden"></p>
+
                 <a href="{{ route('purchase.create', ['product' => $product->id]) }}"
                     class="text-blue-500 text-sm mt-2 inline-block">変更する</a>
             </div>
@@ -67,14 +69,7 @@
         <!-- purchase confirmation -->
         <aside class="w-full lg:w-[400px] space-y-6">
             <!-- 購入処理のフォーム -->
-            <form method="post" action="{{ route('purchase.store', ['product' => $product->id]) }}"
-                class="space-y-6">
-                @csrf
-                <input type="hidden" name="payment" value="{{ request('payment') }}">
-                <input type="hidden" name="postal_code" value="{{ isset($address) ? $address['postal_code'] : '' }}">
-                <input type="hidden" name="address" value="{{ isset($address) ? $address['address'] : '' }}">
-                <input type="hidden" name="building" value="{{ isset($address) ? $address['building'] : '' }}">
-
+            <div class="space-y-6">
                 <table class="w-full text-sm border border-gray-300">
                     <tr class="border-b border-gray-300">
                         <th class="text-lg text-left px-4 py-2">商品代金</th>
@@ -86,12 +81,67 @@
                     </tr>
                 </table>
 
-                <button type="submit"
-                    class="w-full bg-red-500 text-white font-bold py-2 rounded hover:bg-red-400 transition">
-                    購入する
-                </button>
-            </form>
+                @if(request('payment') === 'カード支払い')
+                    <button type="button" id="checkout-button"
+                        class="w-full bg-red-500 text-white font-bold py-2 rounded hover:bg-red-400 transition">
+                        購入する
+                    </button>
+                @else
+                    <form method="post" action="{{ route('purchase.store', ['product' => $product->id]) }}">
+                        @csrf
+                        <input type="hidden" name="payment" value="{{ request('payment') }}">
+                        <input type="hidden" name="postal_code" value="{{ isset($address) ? $address['postal_code'] : '' }}">
+                        <input type="hidden" name="address" value="{{ isset($address) ? $address['address'] : '' }}">
+                        <input type="hidden" name="building" value="{{ isset($address) ? $address['building'] : '' }}">
+                        <button type="submit"
+                            class="w-full bg-red-500 text-white font-bold py-2 rounded hover:bg-red-400 transition">
+                            購入する
+                        </button>
+                    </form>
+                @endif
+            </div>
         </aside>
     </div>
 </main>
+
+@if(request('payment') === 'カード支払い')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe("{{ config('stripe.key') }}");
+        const checkoutButton = document.getElementById('checkout-button');
+        const shippingError = document.getElementById('shipping-error');
+
+        checkoutButton.addEventListener('click', async function() {
+            try {
+                const response = await fetch("{{ route('purchase.checkout-session', ['product' => $product->id]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+
+                const session = await response.json();
+
+                if (session.error) {
+                    shippingError.textContent = session.error;
+                    shippingError.classList.remove('hidden');
+                    return;
+                }
+
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+
+                if (result.error) {
+                    shippingError.textContent = result.error.message;
+                    shippingError.classList.remove('hidden');
+                }
+            } catch (error) {
+                shippingError.textContent = error.message;
+                shippingError.classList.remove('hidden');
+            }
+        });
+    </script>
+@endif
 @endsection
