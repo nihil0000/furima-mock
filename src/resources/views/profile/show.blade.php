@@ -49,7 +49,7 @@
             <!-- exhibit products -->
             @if (request()->query('page', 'exhibit') === 'exhibit')
                 <!-- show exihibit produtcs -->
-                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4 py-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-6">
                     @foreach ($user->products as $product)
                         <div class="bg-gray-100 rounded-lg overflow-hidden shadow hover:shadow-md transition">
                             <a href="{{ route('product.show', ['product' => $product->id]) }}">
@@ -69,7 +69,7 @@
                     @endforeach
                 </div>
             @else
-                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4 py-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-6">
                     @foreach ($user->orders as $order)
                         @php
                             $product = $order->product;

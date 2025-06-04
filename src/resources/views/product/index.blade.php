@@ -32,7 +32,7 @@
     <!-- recommend products -->
     @if (request()->query('page', 'recommend') === 'recommend')
         <!-- show recommended products -->
-        <section class="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-4 py-6">
+        <section class="grid gap-8 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-4 py-6">
             @foreach ($products as $product)
                 <div class="bg-gray-100 rounded-lg overflow-hidden shadow hover:shadow-md transition">
                     <a href="{{ route('product.show', ['product' => $product->id]) }}">
@@ -55,7 +55,7 @@
     <!-- mylist products -->
     @elseif (isset($favorites))
         <!-- show favorite products -->
-        <section class="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-4 py-6">
+        <section class="grid gap-8 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-4 py-6">
             @foreach ($favorites as $favorite)
                 @php $product = $favorite->product; @endphp
 
