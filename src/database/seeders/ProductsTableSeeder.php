@@ -15,7 +15,7 @@ class ProductsTableSeeder extends Seeder
     public function run()
     {
         $param = [
-            'user_id' => 1,
+            'user_id' => 11,
             'product_name' => '腕時計',
             'brand_name' => 'NeoWear',
             'price' => 15000,
@@ -26,7 +26,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 2,
+            'user_id' => 11,
             'product_name' => 'HDD',
             'brand_name' => 'UrbanCraft',
             'price' => 5000,
@@ -37,10 +37,10 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 3,
+            'user_id' => 11,
             'product_name' => '玉ねぎ3束',
             'brand_name' => 'LumiTech',
-            'price' => 300,
+            'price' => 3001,
             'description' => '新鮮な玉ねぎ3束のセット',
             'status' => 'やや傷や汚れあり',
             'image' => 'images/onion.jpg',
@@ -48,7 +48,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 4,
+            'user_id' => 11,
             'product_name' => '革靴',
             'brand_name' => 'ArcoHome',
             'price' => 4000,
@@ -59,7 +59,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 5,
+            'user_id' => 11,
             'product_name' => 'ノートPC',
             'brand_name' => 'Zestique',
             'price' => 45000,
@@ -70,7 +70,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 6,
+            'user_id' => 12,
             'product_name' => 'マイク',
             'brand_name' => 'Minoir',
             'price' => 8000,
@@ -81,7 +81,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 7,
+            'user_id' => 12,
             'product_name' => 'ショルダーバッグ',
             'brand_name' => 'Solvex',
             'price' => 3500,
@@ -92,7 +92,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 8,
+            'user_id' => 12,
             'product_name' => 'タンブラー',
             'brand_name' => 'Calyra',
             'price' => 500,
@@ -103,7 +103,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 9,
+            'user_id' => 12,
             'product_name' => 'コーヒーミル',
             'brand_name' => 'Modello',
             'price' => 4000,
@@ -114,7 +114,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert($param);
 
         $param = [
-            'user_id' => 10,
+            'user_id' => 12,
             'product_name' => 'メイクセット',
             'brand_name' => 'Krafina',
             'price' => 2500,
