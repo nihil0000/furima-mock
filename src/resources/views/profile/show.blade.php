@@ -19,11 +19,15 @@
                 <h2 class="text-2xl">{{ $user->name }}</h2>
 
                 @if (!is_null($user->average_rating))
-                    <div class="flex items-center gap-1 text-yellow-500 text-sm ml-2">
-                        @for ($i = 0; $i < $user->average_rating; $i++)
-                            <span>&#9733;</span>
+                    <div class="flex items-center gap-1 text-2xl ml-2">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $user->average_rating)
+                                <span class="text-yellow-400">&#9733;</span> {{-- 黄色の星 --}}
+                            @else
+                                <span class="text-gray-300">&#9733;</span> {{-- グレーの星 --}}
+                            @endif
                         @endfor
-                        <span class="text-gray-600">（{{ $user->receivedRatings->count() }}件）</span>
+                        <span class="text-gray-600 text-sm ml-1">（{{ $user->receivedRatings->count() }}件）</span>
                     </div>
                 @endif
 
