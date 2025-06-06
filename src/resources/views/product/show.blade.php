@@ -67,10 +67,22 @@
                 <button disabled class="bg-gray-400 text-white py-2 px-6 rounded w-full">sold out</button>
             @else
                 <a href="{{ route('purchase.show', ['product' => $product->id]) }}"
-                    class="block bg-red-500 text-white text-center py-2 px-6 rounded hover:bg-red-400 transition w-full">
+                    class="block bg-red-500 text-white text-center py-2 px-6 rounded hover:bg-red-400 transition w-full mb-2">
                     購入手続きへ
                 </a>
             @endif
+
+            <!-- button for the trade chat page -->
+            @auth
+                @if (auth()->id() !== $sellerId) {{-- ログインユーザーが出品者でない場合のみ表示 --}}
+                    <form action="{{ route('trade.start', ['product' => $product->id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="block bg-gray-500 text-white text-center py-2 px-6 rounded hover:bg-gray-400 transition w-full">
+                            出品者と取引チャットを始める
+                        </button>
+                    </form>
+                @endif
+            @endauth
 
             <!-- product description -->
             <section class="space-y-2 pt-8">

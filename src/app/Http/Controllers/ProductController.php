@@ -70,7 +70,10 @@ class ProductController extends Controller
             ->take(3)
             ->get();
 
-        return view('product.show', compact('product', 'isFavorited', 'latestComments'));
+        // 出品者のユーザーIDもビューに渡す
+        $sellerId = $product->user_id;
+
+        return view('product.show', compact('product', 'isFavorited', 'latestComments', 'sellerId'));
     }
 
 

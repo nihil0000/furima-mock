@@ -5,16 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddressRequest;
 use App\Models\Address;
+use App\Models\Trade;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        /** @var \App\Models\User $user */
         $user = auth()->user();
-        $user->load(['products', 'orders']);
 
-        return view('profile.show', compact('user'));
+        $trades = Trade::where('buyer_id', $user->id)
+            ->orWhere('seller_id', $user->id)
+            ->with('product')
+            ->with(['tradeMessages' => function($q) { $q->latest(); }])
+            ->get()
+            ->sortByDesc(function($trade) {
+                return optional($trade->tradeMessages->first())->created_at;
+            })
+            ->map(function($trade) use ($user) {
+                $unreadCount = $trade->tradeMessages()
+                    ->where('is_read', false)
+                    ->where('user_id', '!=', $user->id)
+                    ->count();
+                $trade->unread_count = $unreadCount;
+                return $trade;
+            })
+            ->values();
+
+        $tradingCount = $trades->sum('unread_count');
+
+        return view('profile.show', [
+            'user' => $user,
+            'tradingProducts' => $trades,
+            'tradingCount' => $tradingCount,
+        ]);
     }
 
     public function edit()
@@ -31,6 +54,7 @@ class ProfileController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
         $user->load('address');
+        $user->load('receivedRatings');
 
         // If a file is uploaded
         if ($request->hasFile('image')) {
