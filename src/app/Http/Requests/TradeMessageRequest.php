@@ -11,9 +11,14 @@ class TradeMessageRequest extends FormRequest
      */
     public function authorize()
     {
-        $trade = $this->route('trade');
+        // メッセージの編集・削除時は、メッセージから取引情報を取得
+        if ($this->route('message')) {
+            $trade = $this->route('message')->trade;
+        } else {
+            $trade = $this->route('trade');
+        }
 
-        return $this->user() && (
+        return $this->user() && $trade && (
             $this->user()->id === $trade->buyer_id ||
             $this->user()->id === $trade->seller_id
         );

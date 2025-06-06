@@ -26,7 +26,7 @@ class TradeMessageController extends Controller
         return redirect()->route('trade.show', $trade->id);
     }
 
-    public function update(Request $request, TradeMessage $message)
+    public function update(TradeMessageRequest $request, TradeMessage $message)
     {
         $this->authorize('update', $message);
         $message->message = $request->message;

@@ -110,7 +110,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/trades/{trade}/complete', [TradeController::class, 'complete'])->name('trades.complete'); // 取引完了ルート
     Route::post('/trades/{trade}/ratings', [RatingController::class, 'store'])->name('trades.ratings.store'); // 評価保存ルート
+
+    // Message
+    Route::patch('/trade-message/{message}', [TradeMessageController::class, 'update'])->name('trade-message.update');
+    Route::delete('/trade-message/{message}', [TradeMessageController::class, 'destroy'])->name('trade-message.destroy');
 });
 
-Route::patch('/trade-message/{message}', [TradeMessageController::class, 'update'])->name('trade-message.update');
-Route::delete('/trade-message/{message}', [TradeMessageController::class, 'destroy'])->name('trade-message.destroy');
