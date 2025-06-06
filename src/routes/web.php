@@ -10,6 +10,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TradeController;
+use App\Http\Controllers\TradeMessageController;
+use App\Http\Controllers\RatingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,3 +99,18 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+// Trade
+Route::middleware('auth')->group(function () {
+    Route::post('/trade/start/{product}', [TradeController::class, 'start'])->name('trade.start');
+    Route::get('/trade/{trade}', [TradeController::class, 'show'])->name('trade.show');
+    Route::post('/trade/{trade}/messages', [TradeMessageController::class, 'store'])->name('trade.messages.store');
+    // マイページ
+    Route::get('/mypage/trade', [TradeController::class, 'index'])->name('mypage.trade.index');
+
+    Route::post('/trades/{trade}/complete', [TradeController::class, 'complete'])->name('trades.complete'); // 取引完了ルート
+    Route::post('/trades/{trade}/ratings', [RatingController::class, 'store'])->name('trades.ratings.store'); // 評価保存ルート
+});
+
+Route::patch('/trade-message/{message}', [TradeMessageController::class, 'update'])->name('trade-message.update');
+Route::delete('/trade-message/{message}', [TradeMessageController::class, 'destroy'])->name('trade-message.destroy');
