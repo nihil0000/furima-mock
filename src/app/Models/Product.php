@@ -45,6 +45,24 @@ class Product extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function trades()
+    {
+        return $this->hasMany(Trade::class);
+    }
+
+    // trades経由でtradeMessagesを取得
+    public function tradeMessages()
+    {
+        return $this->hasManyThrough(
+            \App\Models\TradeMessage::class, // 最終的に取得したいモデル
+            \App\Models\Trade::class,        // 中間テーブル
+            'product_id',                    // Tradeの外部キー（Productに対して）
+            'trade_id',                      // TradeMessageの外部キー（Tradeに対して）
+            'id',                            // Productのローカルキー
+            'id'                             // Tradeのローカルキー
+        );
+    }
+
     // Scope a query to exclude products owned by a specific user
     public function scopeExcludeOwn($query, $userId)
     {

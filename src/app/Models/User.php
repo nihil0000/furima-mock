@@ -50,6 +50,25 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasMany(Order::class);
     }
 
+    public function tradeMessages()
+    {
+        return $this->hasMany(TradeMessage::class);
+    }
+
+    public function receivedRatings()
+    {
+        return $this->hasMany(\App\Models\Rating::class, 'rated_user_id');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        if ($this->receivedRatings()->count() === 0) {
+            return null;
+            }
+
+        return round($this->receivedRatings()->avg('score'));
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
