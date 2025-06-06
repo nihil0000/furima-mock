@@ -33,16 +33,15 @@ DB_HOST=mysql
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
-MAIL_FROM_ADDRESS=test@example.com
+MAIL_FROM_ADDRESS=test1@example.com
+
+※StripeのAPIキーも設定してください。
 
 # アプリケーションキーを生成
 php artisan key:generate
 
-# データベースマイグレーション
-php artisan migrate
-
-# seederでダミーデータを生成
-php artisan db:seed
+# データベースマイグレーション & ダミーデータを生成
+php artisan migrate --seed
 
 # ストレージリンクの作成
 php artisan storage:link
@@ -61,7 +60,19 @@ php artisan storage:link
     - http://localhost
 - phpMyAdmin
     - http://localhost:8080
+- MailHog
+    - http://localhost:8025
 
+## テストアカウント
+- 一般ユーザ1
+   - email: test1@example.com
+   - password: password
+- 一般ユーザ2
+   - email: test2@example.com
+   - password: password
+- 一般ユーザ3
+   - email: test3@example.com
+   - password: password
 
 ## ディレクトリ構成
 ```css
