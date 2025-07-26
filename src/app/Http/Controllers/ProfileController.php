@@ -13,8 +13,11 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        $trades = Trade::where('buyer_id', $user->id)
-            ->orWhere('seller_id', $user->id)
+        $trades = Trade::where(function($query) use ($user) {
+            $query->where('buyer_id', $user->id)
+                  ->orWhere('seller_id', $user->id);
+        })
+        ->where('status', 'trading')
             ->with('product')
             ->with(['tradeMessages' => function($q) { $q->latest(); }])
             ->get()
