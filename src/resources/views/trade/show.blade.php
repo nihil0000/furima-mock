@@ -2,135 +2,169 @@
 
 @section('content')
 <div class="flex h-screen">
-    <!-- サイドバー -->
-    <aside class="w-64 bg-gray-200 p-4 flex-shrink-0">
-        <div class="font-bold mb-4">その他の取引</div>
-        @foreach($sidebarTrades as $sidebarTrade)
-            <a href="{{ route('trade.show', ['trade' => $sidebarTrade->id]) }}"
-                class="flex items-center mb-2 p-2 rounded {{ $sidebarTrade->id == $trade->id ? 'bg-white font-bold' : '' }}">
-                <img src="{{ asset('storage/' . $sidebarTrade->product->image) }}" class="w-10 h-10 object-cover rounded mr-2">
-                <span>{{ $sidebarTrade->product->product_name }}</span>
-            </a>
-        @endforeach
-    </aside>
-
-    <!-- メインチャット画面 -->
-    <main class="flex-1 bg-white p-8">
-        @php
-            $partner = $trade->buyer_id === $currentUserId ? $trade->seller : $trade->buyer;
-            $isBuyer = $trade->buyer_id === $currentUserId;
-            $editMessageId = request('edit_message_id');
-        @endphp
-
-        <!-- タイトルとボタンを横並び -->
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold">
-                「{{ $partner->name }}」さんとの取引画面
-            </h2>
-            @if($isBuyer)
-                <a href="#" id="completeTradeButton" class="bg-red-500 text-white px-6 py-2 rounded-full text-base font-bold hover:bg-red-400">
-                    取引を完了する
+    <div class="flex flex-1 overflow-hidden">
+        <!-- サイドバー -->
+        <aside class="w-64 bg-gray-200 p-4 flex-shrink-0 h-full overflow-y-auto">
+            <div class="font-bold mb-4">その他の取引</div>
+            @foreach($sidebarTrades as $sidebarTrade)
+                <a href="{{ route('trade.show', ['trade' => $sidebarTrade->id]) }}"
+                    class="flex items-center mb-2 p-2 rounded {{ $sidebarTrade->id == $trade->id ? 'bg-white font-bold' : '' }}">
+                    <img src="{{ asset('storage/' . $sidebarTrade->product->image) }}" class="w-10 h-10 object-cover rounded mr-2">
+                    <span>{{ $sidebarTrade->product->product_name }}</span>
                 </a>
-            @endif
-        </div>
+            @endforeach
+        </aside>
 
-        <!-- 商品情報 -->
-        <div class="mb-4 p-4 bg-gray-100 rounded flex items-center gap-6">
-            <img src="{{ asset('storage/' . $trade->product->image) }}" alt="商品画像" class="w-32 h-32 object-cover rounded bg-gray-200">
-            <div>
-                <div class="text-2xl font-bold mb-2">{{ $trade->product->product_name }}</div>
-                <div class="text-lg">¥{{ number_format($trade->product->price) }}</div>
+        <!-- メインチャット画面 -->
+        <main class="flex-1 min-w-0 flex flex-col bg-white p-8 overflow-x-auto overflow-y-auto">
+            @php
+                $partner = $trade->buyer_id === $currentUserId ? $trade->seller : $trade->buyer;
+                $isBuyer = $trade->buyer_id === $currentUserId;
+                $editMessageId = request('edit_message_id');
+            @endphp
+
+            <!-- フラッシュメッセージ -->
+            @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- タイトルとボタンを横並び -->
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold">
+                    「{{ $partner->name }}」さんとの取引画面
+                </h2>
+                @if($isBuyer)
+                    <a href="#" id="completeTradeButton" class="bg-red-500 text-white px-6 py-2 rounded-full text-base font-bold hover:bg-red-400">
+                        取引を完了する
+                    </a>
+                @endif
             </div>
-        </div>
-        <div class="h-96 overflow-y-auto border p-4 mb-4 bg-white rounded flex flex-col gap-2">
-            @foreach($messages as $msg)
-                @if($msg->user_id === $currentUserId)
-                    <!-- 自分のメッセージ（右寄せ） -->
-                    <div class="flex items-start gap-2 justify-end">
-                        <div>
-                            <div class="text-xs text-gray-500 text-right">{{ $msg->user->name }}（{{ $msg->created_at->format('Y/m/d H:i') }}）</div>
-                            @if($editMessageId == $msg->id)
-                                <!-- 編集フォーム -->
-                                <form action="{{ route('trade-message.update', $msg->id) }}" method="POST" class="flex items-center gap-2">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="text" name="message" value="{{ old('message', $msg->message) }}" class="border rounded px-2 py-1 flex-1">
-                                    <button type="submit" class="text-blue-500">保存</button>
-                                    <a href="{{ url()->current() }}" class="text-gray-500 ml-2">キャンセル</a>
-                                </form>
-                            @else
-                                @if($msg->message)
-                                    <div class="bg-blue-200 rounded px-3 py-2 inline-block">{{ $msg->message }}</div>
+
+            <!-- 商品情報 -->
+            <div class="mb-4 p-4 bg-gray-100 rounded flex items-center gap-6">
+                <img src="{{ asset('storage/' . $trade->product->image) }}" alt="商品画像" class="w-32 h-32 object-cover rounded bg-gray-200">
+                <div>
+                    <div class="text-2xl font-bold mb-2">{{ $trade->product->product_name }}</div>
+                    <div class="text-lg">¥{{ number_format($trade->product->price) }}</div>
+                </div>
+            </div>
+            <!-- <div class="h-96 overflow-y-auto border p-4 mb-4 bg-white rounded flex flex-col gap-2"> -->
+            <div class="flex-1 min-h-0 overflow-y-auto border p-4 mb-4 bg-white rounded flex flex-col gap-2">
+                @foreach($messages as $msg)
+                    @if($msg->user_id === $currentUserId)
+                        <!-- 自分のメッセージ（右寄せ） -->
+                        <div class="flex items-start gap-2 justify-end">
+                            <div>
+                                <div class="text-xs text-gray-500 text-right">{{ $msg->user->name }}（{{ $msg->created_at->format('Y/m/d H:i') }}）</div>
+                                @if($editMessageId == $msg->id)
+                                    <!-- 編集フォーム -->
+                                    <form action="{{ route('trade-message.update', $msg->id) }}" method="POST" class="flex items-center gap-2">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="text" name="message" value="{{ old('message', $msg->message) }}" class="border rounded px-2 py-1 flex-1">
+                                        <button type="submit" class="text-blue-500">保存</button>
+                                        <a href="{{ url()->current() }}" class="text-gray-500 ml-2">キャンセル</a>
+                                    </form>
+                                @else
+                                    @if($msg->message)
+                                        <div class="bg-blue-200 rounded px-3 py-2 inline-block">{{ $msg->message }}</div>
+                                    @endif
                                 @endif
-                            @endif
-                            @if($msg->image_path)
-                                <div class="mt-1 text-right">
-                                    <img src="{{ asset('storage/' . $msg->image_path) }}" alt="画像" class="w-32 h-32 object-cover rounded ml-auto">
+                                @if($msg->image_path)
+                                    <div class="mt-1 text-right">
+                                        <img src="{{ asset('storage/' . $msg->image_path) }}" alt="画像" class="w-32 h-32 object-cover rounded ml-auto">
+                                    </div>
+                                @endif
+                                <div class="text-right text-xs mt-1">
+                                    <!-- 編集ボタン -->
+                                    <form action="{{ url()->current() }}" method="GET" class="inline">
+                                        <input type="hidden" name="edit_message_id" value="{{ $msg->id }}">
+                                        <button type="submit" class="text-blue-500 ml-2">編集</button>
+                                    </form>
+                                    <!-- 削除ボタン -->
+                                    <form action="{{ route('trade-message.destroy', $msg->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 ml-2">削除</button>
+                                    </form>
                                 </div>
-                            @endif
-                            <div class="text-right text-xs mt-1">
-                                <!-- 編集ボタン -->
-                                <form action="{{ url()->current() }}" method="GET" class="inline">
-                                    <input type="hidden" name="edit_message_id" value="{{ $msg->id }}">
-                                    <button type="submit" class="text-blue-500 ml-2">編集</button>
-                                </form>
-                                <!-- 削除ボタン -->
-                                <form action="{{ route('trade-message.destroy', $msg->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 ml-2">削除</button>
-                                </form>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                                @if($msg->user->profile_image)
+                                    <img src="{{ asset('storage/' . $msg->user->profile_image) }}" class="w-full h-full object-cover">
+                                @endif
                             </div>
                         </div>
-                        <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                            @if($msg->user->profile_image)
-                                <img src="{{ asset('storage/' . $msg->user->profile_image) }}" class="w-full h-full object-cover">
-                            @endif
+                    @else
+                        <!-- 相手のメッセージ（左寄せ） -->
+                        <div class="flex items-start gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                                @if($msg->user->profile_image)
+                                    <img src="{{ asset('storage/' . $msg->user->profile_image) }}" class="w-full h-full object-cover">
+                                @endif
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500">{{ $msg->user->name }}（{{ $msg->created_at->format('Y/m/d H:i') }}）</div>
+                                @if($msg->message)
+                                    <div class="bg-gray-200 rounded px-3 py-2 inline-block">{{ $msg->message }}</div>
+                                @endif
+                                @if($msg->image_path)
+                                    <div class="mt-1">
+                                        <img src="{{ asset('storage/' . $msg->image_path) }}" alt="画像" class="w-32 h-32 object-cover rounded">
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                @else
-                    <!-- 相手のメッセージ（左寄せ） -->
-                    <div class="flex items-start gap-2">
-                        <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                            @if($msg->user->profile_image)
-                                <img src="{{ asset('storage/' . $msg->user->profile_image) }}" class="w-full h-full object-cover">
-                            @endif
-                        </div>
-                        <div>
-                            <div class="text-xs text-gray-500">{{ $msg->user->name }}（{{ $msg->created_at->format('Y/m/d H:i') }}）</div>
-                            @if($msg->message)
-                                <div class="bg-gray-200 rounded px-3 py-2 inline-block">{{ $msg->message }}</div>
-                            @endif
-                            @if($msg->image_path)
-                                <div class="mt-1">
-                                    <img src="{{ asset('storage/' . $msg->image_path) }}" alt="画像" class="w-32 h-32 object-cover rounded">
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            @endforeach
-        </div>
-        <form action="{{ route('trade.messages.store', $trade->id) }}" method="POST"
-            enctype="multipart/form-data" class="flex gap-2" id="tradeMessageForm">
-            @csrf
-            <div class="flex flex-col flex-1">
-                <input type="text" name="message" class="border rounded px-2 py-1" placeholder="取引メッセージを記入してください">
-                @if ($errors->has('message'))
-                    <p class="text-red-500 text-sm mb-1">{{ $errors->first('message') }}</p>
-                @endif
+                    @endif
+                @endforeach
             </div>
+            <form
+                action="{{ route('trade.messages.store', $trade->id) }}"
+                method="POST"
+                enctype="multipart/form-data"
+                id="tradeMessageForm"
+                class="flex flex-col md:flex-row gap-2 w-full"
+                >
+                @csrf
 
-            <div class="flex flex-col">
-                <input type="file" name="image" class="border rounded px-2 py-1">
-                @if ($errors->has('image'))
-                    <p class="text-red-500 text-sm mb-1">{{ $errors->first('image') }}</p>
-                @endif
-            </div>
+                <!-- メッセージ入力は幅いっぱい -->
+                <div class="flex flex-col flex-1 min-w-0">
+                    <input
+                    type="text"
+                    name="message"
+                    placeholder="取引メッセージを記入してください"
+                    class="w-full border rounded px-2 py-1"
+                    >
+                    @if ($errors->has('message'))
+                    <p class="text-red-500 text-sm mt-1">{{ $errors->first('message') }}</p>
+                    @endif
+                </div>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded">送信</button>
-        </form>
-    </main>
+                <!-- ファイル選択は小さい時は幅いっぱい、広い時は自動 -->
+                <div class="flex flex-col flex-shrink-0 w-full md:w-auto">
+                    <input
+                    type="file"
+                    name="image"
+                    class="w-full md:w-auto border rounded px-2 py-1"
+                    >
+                    @if ($errors->has('image'))
+                    <p class="text-red-500 text-sm mt-1">{{ $errors->first('image') }}</p>
+                    @endif
+                </div>
+
+                <!-- 送信ボタンも同様に -->
+                <button
+                    type="submit"
+                    class="flex-shrink-0 w-full md:w-auto bg-blue-500 text-white px-4 py-1 rounded"
+                >
+                    送信
+                </button>
+            </form>
+
+        </main>
+    </div>
 </div>
 
 <div id="ratingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center hidden">
