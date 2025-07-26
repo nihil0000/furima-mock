@@ -7,6 +7,7 @@ use App\Http\Requests\PurchaseRequest;
 use App\Http\Requests\ShipAddressRequest;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Trade;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Checkout\Session;
@@ -156,10 +157,25 @@ class PurchaseController extends Controller
         $product->is_sold = true;
         $product->save();
 
+        // 既存の取引があれば再利用、なければ新規作成
+        $trade = Trade::where('product_id', $product->id)
+            ->where('buyer_id', $user->id)
+            ->first();
+
+        if (!$trade) {
+            $trade = Trade::create([
+                'product_id' => $product->id,
+                'buyer_id' => $user->id,
+                'seller_id' => $product->user_id,
+                'status' => 'trading',
+            ]);
+        }
+
         // Delete address info in session
         session()->forget('purchase_address_' . $product->id);
 
-        return redirect()->route('product.index');
+        // チャット画面にリダイレクト
+        return redirect()->route('trade.show', $trade->id);
     }
 
     // Handle convenience store payment
@@ -180,9 +196,24 @@ class PurchaseController extends Controller
         $product->is_sold = true;
         $product->save();
 
+        // 既存の取引があれば再利用、なければ新規作成
+        $trade = Trade::where('product_id', $product->id)
+            ->where('buyer_id', $user->id)
+            ->first();
+
+        if (!$trade) {
+            $trade = Trade::create([
+                'product_id' => $product->id,
+                'buyer_id' => $user->id,
+                'seller_id' => $product->user_id,
+                'status' => 'trading',
+            ]);
+        }
+
         // Delete address info in session
         session()->forget('purchase_address_' . $product->id);
 
-        return redirect()->route('product.index');
+        // チャット画面にリダイレクト
+        return redirect()->route('trade.show', $trade->id);
     }
 }

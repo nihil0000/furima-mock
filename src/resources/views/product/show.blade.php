@@ -73,7 +73,7 @@
             @endif
 
             <!-- button for the trade chat page -->
-            @auth
+            <!-- @auth
                 @if (auth()->id() !== $sellerId) {{-- ログインユーザーが出品者でない場合のみ表示 --}}
                     <form action="{{ route('trade.start', ['product' => $product->id]) }}" method="POST">
                         @csrf
@@ -82,7 +82,7 @@
                         </button>
                     </form>
                 @endif
-            @endauth
+            @endauth -->
 
             <!-- product description -->
             <section class="space-y-2 pt-8">
